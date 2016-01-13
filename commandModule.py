@@ -61,6 +61,8 @@ class photCommands(cmd.Cmd):
 			photmanto.loadFromLogFile(filename)
 		if extension=='fits':
 			photmanto.loadFromFITSFile(filename, maxRows)
+		if extension=='dat':
+			photmanto.loadFromTSreduceFile(filename)
 		return
 		
 	def do_set(self, line):
