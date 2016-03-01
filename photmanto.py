@@ -222,6 +222,9 @@ def loadFromTSreduceFile(filename):
 	if "tsreduce" not in firstLine:
 		print "This is not a tsreduce file. (I couldn't find the string 'tsreduce' in the first line.)"
 		return
+		
+	telescopeName = 'Warwick One Metre'
+	telescope = findTelescope(telescopeName)
 	
 	filenames = []
 	midTimes = []
@@ -245,7 +248,9 @@ def loadFromTSreduceFile(filename):
 				referenceDateString = parts[2]
 				referenceTimeString = parts[3]
 				referenceDateUTC = astropy.time.Time(referenceDateString + " " + referenceTimeString)
-				referenceDate = referenceDateUTC.tt
+				tLocation = astropy.coordinates.EarthLocation.from_geodetic(telescope['longitude'], telescope['latitude'], telescope['altitude'])
+				referenceDateUTC.location = tLocation
+				referenceDate = referenceDateUTC
 			if 'FramePattern' in line:
 				targetString = generalUtils.getBetweenChars(line, '^', '(')
 		else:
@@ -321,13 +326,16 @@ def loadFromTSreduceFile(filename):
 		slot.setYError('sigma')
 		slot.target = targetString
 		slot.filter = 'Rise-1'
-		telescopeName = 'Warwick One Metre'
-		slot.telescope = findTelescope(telescopeName)
+		slot.telescope = telescope
 		slot.aperture = a
 		numSlots = slots.addSlot(slot)
 		
 		print referenceDate, referenceDate.scale
-		print referenceDateUTC, referenceDate.scale
+		print referenceDateUTC, referenceDateUTC.scale
+		tLocation = astropy.coordinates.EarthLocation.from_geodetic(telescope['longitude'], telescope['latitude'], telescope['altitude'])
+		referenceDate.location = tLocation
+		print referenceDate, referenceDate.scale, referenceDate.location
+		print referenceDate.tdb
 		
 
 def loadFromFITSFile(filename, maxRows=0):

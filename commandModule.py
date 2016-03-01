@@ -63,6 +63,8 @@ class photCommands(cmd.Cmd):
 			photmanto.loadFromFITSFile(filename, maxRows)
 		if extension=='dat':
 			photmanto.loadFromTSreduceFile(filename)
+		if extension=='ratio':
+			photmanto.loadFromTSratioFile(filename)
 		return
 		
 	def do_set(self, line):
