@@ -21,6 +21,13 @@ class photCommands(cmd.Cmd):
 			return "NOP"
 		return line
 		
+	def default(self, line):
+		command, arg, line = self.parseline(line)
+		func = [getattr(self, n) for n in self.get_names() if n.startswith('do_' + command)]
+		if func:
+			func[0](arg)
+		return 
+		
 	def do_save(self, line):
 		""" save [prefix]
 		Save the current session and data. If specified, a prefix will be added to *.session.ptm and *.data.ptm."""
@@ -238,7 +245,7 @@ class photCommands(cmd.Cmd):
 		
 	def do_removezeros(self, line):
 		""" removezeros [slot id]
-		Removes all data points from the slot where the y-axis value is equal to zero. """
+		Removes all data points from the slot where the y-axis value is equal to zero or is a 'nan'. """
 		params = line.split(' ')
 		try:
 			slotID = int(params[0])
@@ -342,12 +349,6 @@ class photCommands(cmd.Cmd):
 		sys.exit()
 		return True
 	
-	def do_shell(self, line):
-		"Run a shell command"
-		print "running shell command:", line
-		output = os.popen(line).read()
-		print output
-		self.last_output = output
 		
 	def emptyline(self):
 		return

@@ -579,6 +579,8 @@ def removeZeros(slotID):
 	for index, y in enumerate(yValues):
 		if y == 0:
 			mask[index] = 1
+		if numpy.isnan(y):
+			mask[index] = 1
 	slot.applyMask(mask)
 			
 	return
